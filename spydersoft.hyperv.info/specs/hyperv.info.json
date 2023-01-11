@@ -1,0 +1,167 @@
+{
+  "x-generator": "NSwag v13.18.2.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))",
+  "openapi": "3.0.0",
+  "info": {
+    "title": "HyperV Info API",
+    "description": "API for interacting with HyperV",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/info": {
+      "get": {
+        "tags": [
+          "Info"
+        ],
+        "operationId": "info",
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/testpsmodule": {
+      "get": {
+        "tags": [
+          "Info"
+        ],
+        "operationId": "TestPsHyperVModule",
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/vm": {
+      "get": {
+        "tags": [
+          "VM"
+        ],
+        "operationId": "GetVirtualMachines",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/VirtualMachine"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/vm/{name}": {
+      "put": {
+        "tags": [
+          "VM"
+        ],
+        "operationId": "UpdateVirtualMachine",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          }
+        ],
+        "requestBody": {
+          "x-name": "VirtualMachineDetails",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VirtualMachineDetails"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/vm/refreshdelay": {
+      "post": {
+        "tags": [
+          "VM"
+        ],
+        "operationId": "RefreshAutomaticStartDelay",
+        "parameters": [
+          {
+            "name": "groupDelay",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "VirtualMachine": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "automaticStartDelay": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "startGroup": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "delayOffset": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        }
+      },
+      "VirtualMachineDetails": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "startGroup": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "delayOffset": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      }
+    }
+  }
+}
