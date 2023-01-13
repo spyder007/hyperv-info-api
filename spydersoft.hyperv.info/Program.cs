@@ -50,7 +50,7 @@ if (configureAuthentication)
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSingleton<IPowershellExecutor, PowershellExecutor>();
-builder.Services.AddSingleton<IVmCommandService, VmCommandService>();
+builder.Services.AddSingleton<IHyperVService, HyperVService>();
 
 builder.Services.AddOpenApiDocument(doc =>
 {
@@ -116,56 +116,36 @@ app.MapGet("/testpsmodule", async (ILogger<Program> log) =>
         log.LogWarning(ps.Streams.Error.Count.ToString());
         log.LogError(ps.Streams.Error[0].Exception, "Powershell Error");
 
-        return Results.BadRequest($"Error: {ps.Streams.Error[0].Exception.ToString()}");
+        return Results.BadRequest($"Error: {ps.Streams.Error[0].Exception}");
     }
 
     return Results.Ok();
 }).WithName("TestPsHyperVModule").WithDisplayName("Test Powershell Hyper-V Module").WithTags("Info"); 
 
 app.MapGet("/vm",
-        async (ILogger<Program> log, IPowershellExecutor powershellHelper, IVmCommandService commandService) =>
+        async (ILogger<Program> log, IHyperVService commandService) =>
         {
             log.LogInformation("Fielding VirtualMachine Request (/vm)");
 
-            try
-            {
-                var pipelineObjects = await powershellHelper.ExecuteCommandAndGetPipeline(commandService.VmList());
-
-                var vms = pipelineObjects.Select(vm => new VirtualMachine(
-                    vm.Properties["Name"].Value?.ToString() ?? string.Empty,
-                    vm.Properties["State"].Value?.ToString() ?? string.Empty,
-                    (int)vm.Properties["AutomaticStartDelay"].Value,
-                    int.Parse(vm.Properties["StartGroup"].Value?.ToString() ?? "0"),
-                    int.Parse(vm.Properties["DelayOffset"].Value?.ToString() ?? "0")
-                ));
-
-                return vms;
-            }
-            catch (Exception e)
-            {
-                log.LogError(e, "Error retrieving Virtual Machines");
-                return null;
-            }
+            IEnumerable<VirtualMachine>? vms = await commandService.VmList();
+            return vms == null ? Results.Ok(vms) : Results.BadRequest();
         })
     .WithName("GetVirtualMachines").WithDisplayName("Retrieve the list of Virtual Machines").WithTags("VM");
 
-app.MapPut("/vm/{name}", async (ILogger<Program> log, IPowershellExecutor powershellHelper,
-        IVmCommandService commandService, [FromRoute] string name, [FromBody] VirtualMachineDetails details) =>
+app.MapPut("/vm/{name}", async (ILogger<Program> log, IHyperVService commandService, [FromRoute] string name, [FromBody] VirtualMachineDetails details) =>
     {
         log.LogInformation("Updating {vmName} with provided details.", name);
-        var success = await powershellHelper.ExecuteCommand(commandService.SetVmNotes(name, details));
-
+        var success = await commandService.SetVmNotes(name, details);
         return !success ? Results.BadRequest() : Results.Accepted();
     })
     .WithName("UpdateVirtualMachine").WithDisplayName("Update VM Details").WithTags("VM");
 
-app.MapPost("/vm/refreshdelay", async (ILogger<Program> log, IPowershellExecutor powershellHelper,
-        IVmCommandService commandService, IConfiguration config, int? groupDelay) =>
+app.MapPost("/vm/refreshdelay", async (ILogger<Program> log, IHyperVService commandService, IConfiguration config, int? groupDelay) =>
     {
         var refresh = groupDelay ?? 480;
 
         log.LogInformation("Refreshing AutomaticRestartDelay with a group delay of {groupDelay}", refresh);
-        var success = await powershellHelper.ExecuteCommand(commandService.Refresh(refresh));
+        var success = await commandService.Refresh(refresh);
 
         return !success ? Results.BadRequest() : Results.Accepted();
     })

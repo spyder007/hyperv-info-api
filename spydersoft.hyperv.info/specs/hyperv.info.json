@@ -41,17 +41,7 @@
         "operationId": "GetVirtualMachines",
         "responses": {
           "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/VirtualMachine"
-                  }
-                }
-              }
-            }
+            "description": ""
           }
         }
       }
@@ -122,32 +112,6 @@
   },
   "components": {
     "schemas": {
-      "VirtualMachine": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "state": {
-            "type": "string"
-          },
-          "automaticStartDelay": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "startGroup": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "delayOffset": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          }
-        }
-      },
       "VirtualMachineDetails": {
         "type": "object",
         "additionalProperties": false,
