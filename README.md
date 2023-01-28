@@ -30,7 +30,7 @@ The above calculation is only run if the `startGroup` is greater than 1.  The `g
 
 ## Installing the Service
 
-You can install this service using any of the methods described in [How to: Install and uninstall Windows services](https://learn.microsoft.com/en-us/dotnet/framework/windows-services/how-to-install-and-uninstall-services).  The service will need to run as a user with Powershell access and rights to modify the VMs.  
+You can install this service using any of the methods described in [Host ASP.NET Core in a Windows Service](https://learn.microsoft.com/en-us/aspnet/core/host-and-deploy/windows-service?view=aspnetcore-7.0&tabs=visual-studio).  The service will need to run as a user with Powershell access and rights to modify the VMs.  
 
 You will most likely have to create a new user and grant them service log on via local security policy.  See [Enable Service Logon](https://learn.microsoft.com/en-us/system-center/scsm/enable-service-log-on-sm?view=sc-sm-2022) for details.
 

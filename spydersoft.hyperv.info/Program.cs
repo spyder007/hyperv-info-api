@@ -20,6 +20,8 @@ var options = new WebApplicationOptions
 
 var builder = WebApplication.CreateBuilder(options);
 
+builder.WebHost.UseUrls("http://0.0.0.0:5000");
+
 builder.Host.UseSerilog((context, services, configuration) =>
 {
     configuration.ReadFrom.Configuration(context.Configuration);
@@ -128,7 +130,7 @@ app.MapGet("/vm",
             log.LogInformation("Fielding VirtualMachine Request (/vm)");
 
             IEnumerable<VirtualMachine>? vms = await commandService.VmList();
-            return vms == null ? Results.Ok(vms) : Results.BadRequest();
+            return vms != null ? Results.Ok(vms) : Results.BadRequest();
         })
     .WithName("GetVirtualMachines").WithDisplayName("Retrieve the list of Virtual Machines").WithTags("VM");
 

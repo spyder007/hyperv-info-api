@@ -30,7 +30,7 @@ namespace spydersoft.hyperv.info.Services
             try
             {
                 var pipelineObjects = await _executor.ExecuteCommandAndGetPipeline(GetVmList);
-
+                _logger.LogDebug("Found {0} objects", pipelineObjects.Count());
                 var vms = pipelineObjects.Select(vm => new VirtualMachine(
                     vm.Properties["Name"].Value?.ToString() ?? string.Empty,
                     vm.Properties["State"].Value?.ToString() ?? string.Empty,

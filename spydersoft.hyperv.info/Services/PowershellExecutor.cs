@@ -21,6 +21,11 @@ namespace spydersoft.hyperv.info.Services
             {
                 ps.AddScript(command);
                 pipeline = await ps.InvokeAsync().ConfigureAwait(false);
+                if (ps.HadErrors)
+                {
+                    _log.LogError(ps.Streams.Error.First().Exception, "Error Executing Command {command}:{error}",
+                        command, ps.Streams.Error.First().ErrorDetails);
+                }
             }
             finally
             {
