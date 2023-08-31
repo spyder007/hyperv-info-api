@@ -27,11 +27,11 @@ builder.Host.UseSerilog((context, services, configuration) =>
 });
 
 var hostSettings = new HostSettings();
-builder.Configuration.GetSection(HostSettings.HostSettingsKey).Bind(hostSettings);
+builder.Configuration.GetSection(HostSettings.SectionName).Bind(hostSettings);
 builder.WebHost.UseUrls($"{hostSettings.Host}:{hostSettings.Port}");
 
 var identitySettings = new IdentitySettings();
-builder.Configuration.GetSection(IdentitySettings.IdentitySettingsKey).Bind(identitySettings);
+builder.Configuration.GetSection(IdentitySettings.SectionName).Bind(identitySettings);
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

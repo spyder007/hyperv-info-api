@@ -2,7 +2,7 @@
 {
     public class HostSettings
     {
-        public const string HostSettingsKey = "HostSettings";
+        public const string SectionName = "HostSettings";
         public string Host { get; set; } = string.Empty;
         public int Port { get; set; } = 5000;
     }
