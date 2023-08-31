@@ -2,10 +2,11 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting.WindowsServices;
-using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using Serilog;
 using spydersoft.hyperv.info.Models;
+using spydersoft.hyperv.info.Options;
 using spydersoft.hyperv.info.Services;
 using System.Diagnostics;
 using System.Management.Automation;
@@ -20,24 +21,29 @@ var options = new WebApplicationOptions
 
 var builder = WebApplication.CreateBuilder(options);
 
-builder.WebHost.UseUrls("http://0.0.0.0:5000");
-
 builder.Host.UseSerilog((context, services, configuration) =>
 {
     configuration.ReadFrom.Configuration(context.Configuration);
 });
 
+var hostSettings = new HostSettings();
+builder.Configuration.GetSection(HostSettings.HostSettingsKey).Bind(hostSettings);
+builder.WebHost.UseUrls($"{hostSettings.Host}:{hostSettings.Port}");
+
+var identitySettings = new IdentitySettings();
+builder.Configuration.GetSection(IdentitySettings.IdentitySettingsKey).Bind(identitySettings);
+
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-bool configureAuthentication = !string.IsNullOrEmpty(builder.Configuration.GetValue<string>("Identity:AuthorityUrl"));
+bool configureAuthentication = !string.IsNullOrEmpty(identitySettings.AuthorityUrl);
 
 if (configureAuthentication)
 {
     builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         .AddJwtBearer(jwtBearerOptions =>
             {
-                jwtBearerOptions.Authority = builder.Configuration.GetValue<string>("Identity:AuthorityUrl");
-                jwtBearerOptions.Audience = builder.Configuration.GetValue<string>("Identity:ApiName");
+                jwtBearerOptions.Authority = identitySettings.AuthorityUrl;
+                jwtBearerOptions.Audience = identitySettings.ApiName;
 
                 jwtBearerOptions.TokenValidationParameters.ValidTypes = new[] { "at+jwt" };
             }
@@ -112,17 +118,17 @@ app.MapGet("/testpsmodule", async (ILogger<Program> log) =>
     ps.AddScript("Import-Module Hyper-V -SkipEditionCheck; Get-VM");
     await ps.InvokeAsync().ConfigureAwait(false);
 
-    log.LogWarning(ps.Streams.Warning.Count.ToString());
+    log.LogWarning("Executed with {warnings} warnings.", ps.Streams.Warning.Count);
     if (ps.HadErrors)
     {
-        log.LogWarning(ps.Streams.Error.Count.ToString());
+        log.LogWarning("Executed with {errors} errors.", ps.Streams.Error.Count);
         log.LogError(ps.Streams.Error[0].Exception, "Powershell Error");
 
         return Results.BadRequest($"Error: {ps.Streams.Error[0].Exception}");
     }
 
     return Results.Ok();
-}).WithName("TestPsHyperVModule").WithDisplayName("Test Powershell Hyper-V Module").WithTags("Info"); 
+}).WithName("TestPsHyperVModule").WithDisplayName("Test Powershell Hyper-V Module").WithTags("Info");
 
 app.MapGet("/vm",
         async (ILogger<Program> log, IHyperVService commandService) =>

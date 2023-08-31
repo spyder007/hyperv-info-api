@@ -1,8 +1,5 @@
-﻿using Microsoft.AspNetCore.Razor.TagHelpers;
-using Serilog;
-using spydersoft.hyperv.info.Models;
+﻿using spydersoft.hyperv.info.Models;
 using System.Text.Json;
-using System.Xml.Linq;
 
 namespace spydersoft.hyperv.info.Services
 {
@@ -26,11 +23,10 @@ namespace spydersoft.hyperv.info.Services
 
         public async Task<IEnumerable<VirtualMachine>?> VmList()
         {
-
             try
             {
                 var pipelineObjects = await _executor.ExecuteCommandAndGetPipeline(GetVmList);
-                _logger.LogDebug("Found {0} objects", pipelineObjects.Count());
+                _logger.LogDebug("Found {objects} objects", pipelineObjects.Count);
                 var vms = pipelineObjects.Select(vm => new VirtualMachine(
                     vm.Properties["Name"].Value?.ToString() ?? string.Empty,
                     vm.Properties["State"].Value?.ToString() ?? string.Empty,
