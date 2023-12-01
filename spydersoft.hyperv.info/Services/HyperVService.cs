@@ -5,7 +5,7 @@ namespace spydersoft.hyperv.info.Services
 {
     public class HyperVService : IHyperVService
     {
-        private const string GetVmList = "Get-VM | Select Name, State, AutomaticStartDelay, @{n='StartGroup';e= {(ConvertFrom-Json $_.Notes).startGroup}}, @{n='DelayOffset';e= {(ConvertFrom-Json $_.Notes).delayOffset}} | Sort-Object startGroup, delayOffset";
+        private const string GetVmList = "Get-VM | Select Name, State, AutomaticStartDelay, ProcessorCount, MemoryAssigned, @{n='StartGroup';e= {(ConvertFrom-Json $_.Notes).startGroup}}, @{n='DelayOffset';e= {(ConvertFrom-Json $_.Notes).delayOffset}} | Sort-Object startGroup, delayOffset";
 
         private const string SetVmNotesTemplate = "Set-Vm -Name {0} -Notes \"{1}\"";
 
@@ -31,6 +31,8 @@ namespace spydersoft.hyperv.info.Services
                     vm.Properties["Name"].Value?.ToString() ?? string.Empty,
                     vm.Properties["State"].Value?.ToString() ?? string.Empty,
                     (int)vm.Properties["AutomaticStartDelay"].Value,
+                    (long)vm.Properties["ProcessorCount"].Value,
+                    (long)vm.Properties["MemoryAssigned"].Value,
                     int.Parse(vm.Properties["StartGroup"].Value?.ToString() ?? "0"),
                     int.Parse(vm.Properties["DelayOffset"].Value?.ToString() ?? "0")
                 ));
