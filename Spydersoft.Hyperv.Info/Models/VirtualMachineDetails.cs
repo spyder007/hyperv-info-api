@@ -1,4 +1,4 @@
-﻿namespace spydersoft.hyperv.info.Models
+﻿namespace Spydersoft.Hyperv.Info.Models
 {
     public class VirtualMachineDetails
     {

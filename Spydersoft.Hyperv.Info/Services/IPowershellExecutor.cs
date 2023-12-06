@@ -1,6 +1,6 @@
 ﻿using System.Management.Automation;
 
-namespace spydersoft.hyperv.info.Services
+namespace Spydersoft.Hyperv.Info.Services
 {
     public interface IPowershellExecutor
     {
