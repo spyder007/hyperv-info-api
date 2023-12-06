@@ -1,6 +1,6 @@
-﻿using spydersoft.hyperv.info.Models;
+﻿using Spydersoft.Hyperv.Info.Models;
 
-namespace spydersoft.hyperv.info.Services
+namespace Spydersoft.Hyperv.Info.Services
 {
     public interface IHyperVService
     {

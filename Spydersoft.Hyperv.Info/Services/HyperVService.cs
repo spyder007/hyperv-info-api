@@ -1,7 +1,7 @@
-﻿using spydersoft.hyperv.info.Models;
+﻿using Spydersoft.Hyperv.Info.Models;
 using System.Text.Json;
 
-namespace spydersoft.hyperv.info.Services
+namespace Spydersoft.Hyperv.Info.Services
 {
     public class HyperVService : IHyperVService
     {

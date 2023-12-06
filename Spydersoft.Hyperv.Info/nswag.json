@@ -3,7 +3,7 @@
   "defaultVariables": "Configuration=Debug",
   "documentGenerator": {
     "aspNetCoreToOpenApi": {
-      "project": "spydersoft.hyperv.info.csproj",
+      "project": "Spydersoft.Hyperv.Info.csproj",
       "msBuildProjectExtensionsPath": null,
       "configuration": "$(Configuration)",
       "runtime": null,

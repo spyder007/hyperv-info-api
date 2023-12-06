@@ -1,4 +1,4 @@
-﻿namespace spydersoft.hyperv.info.Options
+﻿namespace Spydersoft.Hyperv.Info.Options
 {
     public class IdentitySettings
     {

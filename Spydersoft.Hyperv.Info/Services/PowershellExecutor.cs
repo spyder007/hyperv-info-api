@@ -1,7 +1,7 @@
 ﻿using System.Management.Automation;
 using System.Management.Automation.Runspaces;
 
-namespace spydersoft.hyperv.info.Services
+namespace Spydersoft.Hyperv.Info.Services
 {
     public class PowershellExecutor : IPowershellExecutor
     {
