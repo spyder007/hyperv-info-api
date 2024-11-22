@@ -3,18 +3,13 @@ using System.Management.Automation.Runspaces;
 
 namespace Spydersoft.Hyperv.Info.Services
 {
-    public class PowershellExecutor : IPowershellExecutor
+    public class PowershellExecutor(ILogger<PowershellExecutor> log) : IPowershellExecutor
     {
-        private readonly ILogger<PowershellExecutor> _log;
-
-        public PowershellExecutor(ILogger<PowershellExecutor> log)
-        {
-            _log = log;
-        }
+        private readonly ILogger<PowershellExecutor> _log = log;
 
         public async Task<PSDataCollection<PSObject>> ExecuteCommandAndGetPipeline(string command)
         {
-            _log.LogInformation("Executing Powershell Command: {command}", command);
+            _log.LogInformation("Executing Powershell Command: {Command}", command);
             PSDataCollection<PSObject> pipeline;
             PowerShell ps = PrepareShell();
             try
@@ -23,7 +18,7 @@ namespace Spydersoft.Hyperv.Info.Services
                 pipeline = await ps.InvokeAsync().ConfigureAwait(false);
                 if (ps.HadErrors)
                 {
-                    _log.LogError(ps.Streams.Error[0].Exception, "Error Executing Command {command}:{error}",
+                    _log.LogError(ps.Streams.Error[0].Exception, "Error Executing Command {Command}:{Error}",
                         command, ps.Streams.Error[0].ErrorDetails);
                 }
             }
@@ -66,7 +61,7 @@ namespace Spydersoft.Hyperv.Info.Services
         {
             if (ps.HadErrors)
             {
-                _log.LogWarning("Executed with {errors} errors.", ps.Streams.Error.Count);
+                _log.LogWarning("Executed with {Errors} errors.", ps.Streams.Error.Count);
                 _log.LogError(ps.Streams.Error[0].Exception, "Powershell Error");
             }
 

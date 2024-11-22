@@ -1,0 +1,14 @@
+{
+	"endOfLine": "auto",
+	"printWidth": 120,
+	"trailingComma": "all",
+	"overrides": [
+		{
+			"files": ["appsettings.json", "appsettings.*.json"],
+			"options": {
+				"plugins": ["prettier-plugin-sort-json"],
+				"jsonRecursiveSort": true
+			}
+		}
+	]
+}

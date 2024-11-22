@@ -1,7 +1,7 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
 	  <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
@@ -9,28 +9,25 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Aspnetcore.hosting.windowsservices" Version="6.0.5" />
-    <PackageReference Include="Microsoft.Extensions.hosting.windowsservices" Version="6.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.12" />
-    <PackageReference Include="microsoft.powershell.sdk" Version="7.2.4" />
-    <PackageReference Include="serilog" Version="2.12.0" />
-    <PackageReference Include="serilog.aspnetcore" Version="6.1.0" />
-    <PackageReference Include="serilog.settings.configuration" Version="3.4.0" />
-    <PackageReference Include="serilog.sinks.console" Version="4.1.0" />
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="9.8.0.76515">
+    <PackageReference Include="Microsoft.Aspnetcore.hosting.windowsservices" Version="8.0.11" />
+    <PackageReference Include="Microsoft.Extensions.hosting.windowsservices" Version="8.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.11" />
+    <PackageReference Include="microsoft.powershell.sdk" Version="7.4.6" />
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="9.32.0.97167">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="NSwag.AspNetCore" Version="13.18.2" />
-    <PackageReference Include="NSwag.MSBuild" Version="13.18.2">
+    <PackageReference Include="NSwag.AspNetCore" Version="14.2.0" />
+    <PackageReference Include="NSwag.MSBuild" Version="14.2.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Spydersoft.Platform.Hosting" Version="1.2.1" />
   </ItemGroup>
 
   <Target Name="NSwag" AfterTargets="Build" Condition=" '$(Configuration)' == 'Debug' ">
     <Copy SourceFiles="@(ReferencePath)" DestinationFolder="$(OutDir)References" />
-    <Exec Command="$(NSwagExe_Net60) run nswag.json /variables:Configuration=$(Configuration)" />
+    <Exec Command="$(NSwagExe_Net80) run nswag.json /variables:Configuration=$(Configuration)" />
     <RemoveDir Directories="$(OutDir)References" />
   </Target>
   

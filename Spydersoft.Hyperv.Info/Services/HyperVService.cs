@@ -15,10 +15,17 @@ namespace Spydersoft.Hyperv.Info.Services
 
         private readonly IPowershellExecutor _executor;
 
+        private readonly JsonSerializerOptions _jsonOptions;
+
         public HyperVService(ILogger<HyperVService> logger, IPowershellExecutor executor)
         {
             _logger = logger;
             _executor = executor;
+            _jsonOptions = new JsonSerializerOptions
+            {
+                WriteIndented = true,
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            };
         }
 
         public async Task<IEnumerable<VirtualMachine>?> VmList()
@@ -26,7 +33,7 @@ namespace Spydersoft.Hyperv.Info.Services
             try
             {
                 var pipelineObjects = await _executor.ExecuteCommandAndGetPipeline(GetVmList);
-                _logger.LogDebug("Found {objects} objects", pipelineObjects.Count);
+                _logger.LogDebug("Found {Objects} objects", pipelineObjects.Count);
                 var vms = pipelineObjects.Select(vm => new VirtualMachine(
                     vm.Properties["Name"].Value?.ToString() ?? string.Empty,
                     vm.Properties["State"].Value?.ToString() ?? string.Empty,
@@ -49,22 +56,17 @@ namespace Spydersoft.Hyperv.Info.Services
 
         public async Task<bool> SetVmNotes(string vmName, VirtualMachineDetails details)
         {
-            var jsonSerializerOptions = new JsonSerializerOptions
-            {
-                WriteIndented = true,
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-            };
-            string notes = JsonSerializer.Serialize(details, jsonSerializerOptions);
+            string notes = JsonSerializer.Serialize(details, _jsonOptions);
 
             var command = string.Format(SetVmNotesTemplate, vmName, notes.Replace("\"", "`\""));
-            _logger.LogDebug("Generated {command}", command);
+            _logger.LogDebug("Generated {Command}", command);
             return await _executor.ExecuteCommand(command);
         }
 
         public async Task<bool> Refresh(int refresh)
         {
             var command = string.Format(RefreshAutomaticStartDelayTemplate, refresh);
-            _logger.LogDebug("Generated {command}", command);
+            _logger.LogDebug("Generated {Command}", command);
             return await _executor.ExecuteCommand(command);
         }
     }

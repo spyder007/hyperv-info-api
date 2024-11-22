@@ -1,5 +1,5 @@
 {
-  "runtime": "Net60",
+  "runtime": "Net80",
   "defaultVariables": "Configuration=Debug",
   "documentGenerator": {
     "aspNetCoreToOpenApi": {
@@ -43,7 +43,7 @@
       "serializerSettingsType": null,
       "useDocumentProvider": true,
       "documentName": "hyperv.info",
-      "aspNetCoreEnvironment": null,
+      "aspNetCoreEnvironment": "NSwag",
       "createWebHostBuilderMethod": null,
       "startupType": null,
       "allowNullableBodyParameters": true,
