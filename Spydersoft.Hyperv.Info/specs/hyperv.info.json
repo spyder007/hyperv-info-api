@@ -7,38 +7,80 @@
     "version": "1.0.0"
   },
   "paths": {
-    "/testpsmodule": {
+    "/Vm": {
       "get": {
         "tags": [
-          "Info"
+          "Vm"
         ],
-        "operationId": "TestPsHyperVModule",
+        "operationId": "Vm_Get",
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/VirtualMachine"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
           }
         }
       }
     },
-    "/vm": {
-      "get": {
+    "/Vm/refreshdelay": {
+      "post": {
         "tags": [
-          "VM"
+          "Vm"
         ],
-        "operationId": "GetVirtualMachines",
+        "operationId": "Vm_RefreshDelay",
+        "parameters": [
+          {
+            "name": "groupDelay",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            },
+            "x-position": 1
+          }
+        ],
         "responses": {
-          "200": {
+          "202": {
             "description": ""
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
           }
         }
       }
     },
-    "/vm/{name}": {
+    "/Vm/{name}": {
       "put": {
         "tags": [
-          "VM"
+          "Vm"
         ],
-        "operationId": "UpdateVirtualMachine",
+        "operationId": "Vm_Put",
         "parameters": [
           {
             "name": "name",
@@ -63,33 +105,18 @@
           "x-position": 2
         },
         "responses": {
-          "200": {
+          "202": {
             "description": ""
-          }
-        }
-      }
-    },
-    "/vm/refreshdelay": {
-      "post": {
-        "tags": [
-          "VM"
-        ],
-        "operationId": "RefreshAutomaticStartDelay",
-        "parameters": [
-          {
-            "name": "groupDelay",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "nullable": true
-            },
-            "x-position": 1
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
           }
         }
       }
@@ -97,6 +124,69 @@
   },
   "components": {
     "schemas": {
+      "VirtualMachine": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "automaticStartDelay": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "processorCount": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "memoryAssigned": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "startGroup": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "delayOffset": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        }
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "additionalProperties": {
+          "nullable": true
+        },
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
       "VirtualMachineDetails": {
         "type": "object",
         "additionalProperties": false,
