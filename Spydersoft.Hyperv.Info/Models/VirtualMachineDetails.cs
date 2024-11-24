@@ -2,7 +2,7 @@
 {
     public class VirtualMachineDetails
     {
-        public int StartGroup { get; set; }
-        public int DelayOffset { get; set; }
+        public required int StartGroup { get; set; }
+        public required int DelayOffset { get; set; }
     }
 }

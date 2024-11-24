@@ -1,0 +1,6 @@
+{
+    "*.cs": ["dotnet format --include"],
+    "*.md": ["prettier --write"],
+    "appsettings.*.json": ["prettier --write"],
+    "appsettings.json": ["prettier --write"]
+}

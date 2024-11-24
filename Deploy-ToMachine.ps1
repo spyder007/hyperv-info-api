@@ -18,7 +18,7 @@ Write-Host "Saving Appsettings";
 Copy-Item "\\$($machineName)\$($serviceSharePath)\appsettings.json" "temp.appsettings.json"
 
 Write-Host "Copying files to $machineName"
-Copy-Item -Recurse -Force Spydersoft.Hyperv.Info\bin\Release\net6.0\* "\\$($machineName)\$($serviceSharePath)"
+Copy-Item -Recurse -Force Spydersoft.Hyperv.Info\bin\Release\net8.0\* "\\$($machineName)\$($serviceSharePath)"
 
 Write-Host "Loading Appsettings";
 Move-Item "temp.appsettings.json" "\\$($machineName)\$($serviceSharePath)\appsettings.json" -Force
